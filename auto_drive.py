@@ -43,11 +43,11 @@ def main():
             keyboard.release("up")
         elif predicted_class == 1:
             keyboard.press("left")
-            time.sleep(0.2)
+            time.sleep(0.3)
             keyboard.release("left")
         elif predicted_class == 2:
             keyboard.press("right")
-            time.sleep(0.2)
+            time.sleep(0.3)
             keyboard.release("right")
 
 if __name__ == "__main__":

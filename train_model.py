@@ -45,16 +45,29 @@ def build(height, width, channels, classes):
 
     # First convolutional layer
     model.add(layers.Input(shape=input_shape))
+    model.add(layers.Dropout(rate=0.2))
+    model.add(layers.BatchNormalization())
     model.add(layers.Conv2D(filters=32, kernel_size=(5, 5), padding="same"))
     model.add(layers.Activation("relu"))
     model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
     # Second convolutional layer
+    model.add(layers.Dropout(rate=0.2))
+    model.add(layers.BatchNormalization())
     model.add(layers.Conv2D(filters=64, kernel_size=(5, 5), padding="same"))
     model.add(layers.Activation("relu"))
     model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
+    # Third convolutional layer
+    model.add(layers.Dropout(rate=0.2))
+    model.add(layers.BatchNormalization())
+    model.add(layers.Conv2D(filters=128, kernel_size=(5, 5), padding="same"))
+    model.add(layers.Activation("relu"))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
     # Dense layer (hidden layer)
+    model.add(layers.Dropout(rate=0.2))
+    model.add(layers.BatchNormalization())
     model.add(layers.Flatten()) # Convert multi-dimensional tensor into a one-dimensional vector
     model.add(layers.Dense(512))
     model.add(layers.Activation("relu"))
@@ -82,7 +95,6 @@ def main():
     y_test = to_categorical(y_test, num_classes=classes)
 
     epochs = 100
-    learning_rate = 0.001
     batch_size = 32
 
     # Initialize the model

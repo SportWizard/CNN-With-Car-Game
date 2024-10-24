@@ -2,12 +2,11 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Activation, Flatten, Dense
+from tensorflow.keras import layers, models
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.utils import img_to_array
-from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.utils import img_to_array, to_categorical
 from sklearn.model_selection import train_test_split
+
 
 def construct_data(height, width):
     dataset_dir = "outputs"
@@ -39,34 +38,37 @@ def construct_data(height, width):
 def build(height, width, channels, classes):
     input_shape = (height, width, channels)
 
-    model = Sequential()
+    model = models.Sequential()
+
+    # Data augmentation
+    layers.RandomContrast(factor=0.5, seed=32)
 
     # First convolutional layer
-    model.add(Input(shape=input_shape))
-    model.add(Conv2D(filters=32, kernel_size=(5, 5), padding="same"))
-    model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(layers.Input(shape=input_shape))
+    model.add(layers.Conv2D(filters=32, kernel_size=(5, 5), padding="same"))
+    model.add(layers.Activation("relu"))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
     # Second convolutional layer
-    model.add(Conv2D(filters=64, kernel_size=(5, 5), padding="same"))
-    model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(layers.Conv2D(filters=64, kernel_size=(5, 5), padding="same"))
+    model.add(layers.Activation("relu"))
+    model.add(layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
 
     # Dense layer (hidden layer)
-    model.add(Flatten()) # Convert multi-dimensional tensor into a one-dimensional vector
-    model.add(Dense(512))
-    model.add(Activation("relu"))
+    model.add(layers.Flatten()) # Convert multi-dimensional tensor into a one-dimensional vector
+    model.add(layers.Dense(512))
+    model.add(layers.Activation("relu"))
 
     # Output layer
-    model.add(Dense(classes))
-    model.add(Activation("softmax"))
+    model.add(layers.Dense(classes))
+    model.add(layers.Activation("softmax"))
 
     return model
 
 def main():
     height = 64 # Height of the image
     width = 64 # Width of the image
-    channels = 3 # Number of channel (R, G, B)
+    channels = 3 # Number of channel (RGB has 3 channels)
 
     classes = 3 # Number of outputs
 
